@@ -1,5 +1,69 @@
 <!DOCTYPE>
 
 <html>
+<head>
+<script type="text/javascript">
+	function fillTags() {
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+			// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {
+			// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var text = primiJSONTekstOdPosluzitelja();
+				var array = JSON.parse(text);
+				var htmlText = ""
+
+				for (var i = 0; i < polje.length; i++) {
+					htmlText += '<input type="button" value="' + array[i]
+							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
+				}
+
+			}
+		}
+		xmlhttp.open("GET", "servlets/tags", true);
+		xmlhttp.send();		
+	}
 	
+	function showLittle(String tagName) {
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+			// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {
+			// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var text = primiJSONTekstOdPosluzitelja();
+				var array = JSON.parse(text);
+				var htmlText = ""
+
+				for (var i = 0; i < polje.length; i++) {
+					htmlText += '<input type="button" value="' + array[i]
+							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
+				}
+
+			}
+		}
+		xmlhttp.open("GET", "servlets/thumbnails?tag="+tagName, true);
+		xmlhttp.send();
+	}
+</script>
+</head>
+<body onload="fillTags();">
+	<!-- when pages loads,calls method for filling tags -->
+	<div id="tags">
+		<h2>List of tags</h2>
+		&nbsp;
+	</div>
+
+</body>
 </html>
