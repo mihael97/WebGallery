@@ -29,7 +29,7 @@ public class TagsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Method loads all unique tags form disc
+	 * Method loads all unique tags from disc
 	 * 
 	 * @param req
 	 *            - HTTP request
@@ -38,15 +38,18 @@ public class TagsServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Set<String> set = Util.getTags();
+		Set<String> set = Util.getTags(req);
 		String[] array = new String[set.size()];
 		set.toArray(array);
 		resp.setContentType("application/json;charset=UTF-8");
+
+		System.out.println("\nTU SAM!\n");
 
 		Gson gson = new Gson();
 		String jsonText = gson.toJson(array);
 		resp.getWriter().write(jsonText);
 		resp.getWriter().flush();
+
 	}
 
 }

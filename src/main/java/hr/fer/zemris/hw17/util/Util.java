@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Abstract class contains method for manipulating with data on disc<br>
  * Class provides method for:<br>
@@ -19,22 +21,20 @@ import java.util.Set;
  *
  */
 public abstract class Util {
-
-	/**
-	 * String constant shows where file with pictures description is stored
-	 */
-	private static final String DESCRIPTION_FILE = "src/main/WEB-INF/opisnik.txt";
-
 	/**
 	 * Method loads file form disc and returns set of <code>unique</code> tags
+	 * 
+	 * @param req
 	 * 
 	 * @return set of tags
 	 * @throws IOException
 	 *             -exception during reading
 	 */
-	public static Set<String> getTags() throws IOException {
+	public static Set<String> getTags(HttpServletRequest req) throws IOException {
 		Set<String> forReturn = new HashSet<>();
-		List<String> file = Files.readAllLines(Paths.get(DESCRIPTION_FILE));
+		List<String> file = Files
+				.readAllLines(Paths.get(req.getServletContext().getRealPath("/WEB-INF/")).resolve("opisnik.txt"));
+		System.out.println("\n\n\n" + file.size());
 		int i = 2;
 
 		while (i < file.size()) {

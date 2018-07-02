@@ -15,15 +15,16 @@
 
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				var text = primiJSONTekstOdPosluzitelja();
+				var text = xmlhttp.responseText;
 				var array = JSON.parse(text);
 				var htmlText = ""
 
-				for (var i = 0; i < polje.length; i++) {
+				for (var i = 0; i < array.length; i++) {
 					htmlText += '<input type="button" value="' + array[i]
 							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
 				}
-
+				
+                document.getElementById("tags").innerHTML = htmlText;
 			}
 		}
 		xmlhttp.open("GET", "servlets/tags", true);
@@ -42,11 +43,11 @@
 
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				var text = primiJSONTekstOdPosluzitelja();
+				var text = xmlhttp.responseText;
 				var array = JSON.parse(text);
 				var htmlText = ""
 
-				for (var i = 0; i < polje.length; i++) {
+				for (var i = 0; i < array.length; i++) {
 					htmlText += '<input type="button" value="' + array[i]
 							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
 				}
@@ -60,10 +61,7 @@
 </head>
 <body onload="fillTags();">
 	<!-- when pages loads,calls method for filling tags -->
-	<div id="tags">
-		<h2>List of tags</h2>
-		&nbsp;
-	</div>
+	<div id="tags">&nbsp;</div>
 
 </body>
 </html>
