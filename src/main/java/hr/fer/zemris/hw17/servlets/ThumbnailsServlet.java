@@ -15,19 +15,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
 import com.google.gson.Gson;
 
-import hr.fer.zemris.hw17.util.Picture;
 import hr.fer.zemris.hw17.util.Util;
 
 /**
- * Class represents {@link HttpServlet} and contains method for creating thumb
- * nails<br>
- * On disc is map whit already used <code>thumb nails</code>. If thumb nail we
- * want is not used before,method will create it for first time and saves it on
- * disc. Otherwise,it will load generated thumb nail and redirects it to client
+ * Class represents {@link HttpServlet} and contains method for creating thumbnails<br>
+ * On disc is map with already used <code>thumbnails</code>. If thumbnail we
+ * want is not used before,method will create it for first time and save it on
+ * disc. Otherwise,it will load generated thumbnail and redirects it to client
  * 
  * @author Mihael
  *
@@ -35,13 +31,33 @@ import hr.fer.zemris.hw17.util.Util;
 @WebServlet("/servlets/thumbnails")
 public class ThumbnailsServlet extends HttpServlet {
 	/**
-	 * Every thumb nail dimensions should be <code>150x150</code>
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Every thumbnail dimensions should be <code>150x150</code>
 	 */
 	private final Integer DIMENSIONS = 150;
 
+	/**
+	 * Path to folder with thumbnails
+	 */
 	private final static String THUMBNAILS = "WEB-INF/thumbnails/";
+	/**
+	 * Path to folder with pictures
+	 */
 	private final static String PICTURES = "WEB-INF/slike/";
 
+	/**
+	 * Method returns all pictures name where every picture must be described with
+	 * tag from parameter
+	 * 
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @param resp
+	 *            - {@link HttpServletResponse}
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Util.createFolder(req);
@@ -68,10 +84,35 @@ public class ThumbnailsServlet extends HttpServlet {
 		resp.getWriter().flush();
 	}
 
+	/**
+	 * Method saves photo in <code>jpg</code> format on disc
+	 * 
+	 * @param path
+	 *            - path to place for storing
+	 * @param image
+	 *            - image
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @throws IOException
+	 *             - exception during writing
+	 */
 	private void saveImage(Path path, BufferedImage image, HttpServletRequest req) throws IOException {
 		ImageIO.write(image, "jpg", path.toFile());
 	}
 
+	/**
+	 * Method loads picture in full size form disc and resizes it
+	 * 
+	 * @param path
+	 *            - path to location where picture is stored
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @return resized photo
+	 * @throws MalformedURLException
+	 *             - exceptions with URL
+	 * @throws IOException
+	 *             - if exception during loading appears
+	 */
 	private BufferedImage loadImage(Path path, HttpServletRequest req) throws MalformedURLException, IOException {
 		BufferedImage image = ImageIO.read(path.toUri().toURL());
 		BufferedImage resized = new BufferedImage(DIMENSIONS, DIMENSIONS, BufferedImage.TYPE_3BYTE_BGR);

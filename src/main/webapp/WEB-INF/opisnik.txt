@@ -30,7 +30,7 @@ Kia Pride
 kia,pride,korea,city,small
 ktmDuke.jpg
 KTM Duke 390
-ktm,duke.begginer,small
+ktm,duke,begginer,small
 ladaNiva.jpg
 Lada Niva
 lada,niva,russia,4x4,petrol

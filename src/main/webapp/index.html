@@ -6,29 +6,10 @@
 
 <script type="text/javascript">
 <!--
-	function showPicture(name) {
-		var xmlhttp;
-
-		if (window.XMLHttpRequest) {
-			xmlhttp = new XMLHttpRequest();
-		} else {
-			// code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				var text = xmlhttp.responseText;
-				var img = JSON.parse(text);
-				var desc = img.description;
-				var tags=img.tags;
-
-				document.getElementById("thumbnails").innerHTML = html;
-			}
-		}
-		xmlhttp.open("GET", "servlets/getInfo?name=" + name, true);
-		xmlhttp.send();
+	function getPicture(name) {
+		
 	}
+	
 	function thumbnails(tag) {
 		var xmlhttp;
 
@@ -47,8 +28,13 @@
 
 				html += '<h3>Thumb nails</h3>'
 				for (var i = 0; i < array.length; i++) {
-					html += '<img src="servlets/getThumb?name=' + array[i]
-							+ '">';
+					html += "<img src='servlets/getThumb?name=" + array[i]
+							+ "' onclick='getPicture(\"" + array[i]
+							+ "\")'></img>";
+
+					if ((i + 1) % 3 == 0) {
+						html += '<br>';
+					}
 				}
 				document.getElementById("thumbnails").innerHTML = html;
 			}
@@ -97,6 +83,7 @@
 	<h1>Vehicle gallery</h1>
 	<div id="container">
 		<div id="tags">&nbsp;</div>
+		<div id="picture">&nbsp;</div>
 		<div id="thumbnails">&nbsp;</div>
 	</div>
 </body>

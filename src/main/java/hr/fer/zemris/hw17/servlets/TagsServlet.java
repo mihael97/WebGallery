@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import hr.fer.zemris.hw17.util.Util;
 
 /**
- * Class represents {@link HttpServlet} which loads all unique tag names form
+ * Class represents {@link HttpServlet} which loads all unique tag names from
  * disc
  * 
  * @author Mihael

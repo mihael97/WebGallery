@@ -14,9 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Abstract class contains method for manipulating with data on disc<br>
- * Class provides method for:<br>
+ * Class provides methods for:<br>
  * <ul>
- * <li>loading tag names form disc</li>
+ * <li>loading tag names from disc</li>
+ * <li>creating folder for thumbnail storing</li>
+ * <li>filtering pictures by tag name</li>
+ * <li>returning pictures informations</li>
  * </ul>
  * 
  * @author Mihael
@@ -24,8 +27,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class Util {
 
+	/**
+	 * Path to folder with thumb nails
+	 */
 	private final static String THUMBNAILS = "WEB-INF/thumbnails/";
-	private final static String PICTURES = "WEB-INF/slike/";
 
 	/**
 	 * Method loads file form disc and returns set of <code>unique</code> tags
@@ -104,6 +109,17 @@ public abstract class Util {
 		return forReturn;
 	}
 
+	/**
+	 * Method returns informations about picture
+	 * 
+	 * @param parameter
+	 *            - picture name
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @return informations about picture
+	 * @throws IOException
+	 *             - if exception during reading appears
+	 */
 	public static Picture getPictureByName(String parameter, HttpServletRequest req) throws IOException {
 		Picture forReturn = null;
 
