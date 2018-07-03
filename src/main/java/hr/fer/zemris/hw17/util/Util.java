@@ -1,6 +1,5 @@
 package hr.fer.zemris.hw17.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +36,6 @@ public abstract class Util {
 		Set<String> forReturn = new HashSet<>();
 		List<String> file = Files
 				.readAllLines(Paths.get(req.getServletContext().getRealPath("/WEB-INF/")).resolve("opisnik.txt"));
-		System.out.println("\n\n\n" + file.size());
 		int i = 2;
 
 		while (i < file.size()) {
@@ -69,12 +67,22 @@ public abstract class Util {
 		}
 	}
 
+	/**
+	 * Method filters all pictures which have specific tag
+	 * 
+	 * @param parameter
+	 *            - tag we need
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @return List of pictures name
+	 * @throws IOException
+	 *             - exception during reading
+	 */
 	public static List<String> getPictureByTag(String parameter, HttpServletRequest req) throws IOException {
 		List<String> forReturn = new ArrayList<>();
 
 		List<String> file = Files
 				.readAllLines(Paths.get(req.getServletContext().getRealPath("/WEB-INF/")).resolve("opisnik.txt"));
-		System.out.println("\n\n\n" + file.size());
 		int i = 2;
 
 		while (i < file.size()) {
@@ -83,6 +91,7 @@ public abstract class Util {
 
 			for (String string : array) {
 				if (parameter.equals(string)) {
+					System.out.println(file.get(i - 2));
 					forReturn.add(file.get(i - 2));
 					break;
 				}

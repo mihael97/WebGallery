@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ import hr.fer.zemris.hw17.util.Util;
  */
 @WebServlet("/servlets/thumbnails")
 public class ThumbnailsServlet extends HttpServlet {
-	private final String THUMBNAILS = "WEB-INF/thumbnails/";
-	private final String PICTURES = "WEB-INF/slike/";
+	private final String THUMBNAILS = "/WEB-INF/thumbnails/";
+	private final String PICTURES = "/WEB-INF/slike/";
 	/**
 	 * Every thumb nail dimensions should be <code>150x150</code>
 	 */
@@ -44,16 +45,20 @@ public class ThumbnailsServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Util.createFolder(req);
 
-		List<String> tags = Util.getPictureByTag(req.getParameter("tagname"), req);
+		List<String> pictures = Util.getPictureByTag(req.getParameter("tagname"), req);
 		List<Path> images = new ArrayList<>();
 
-		for (String tag : tags) {
-			Path path = Paths.get(req.getServletContext().getRealPath(THUMBNAILS + tag + ".jpg"));
+		for (String picture : pictures) {
+			Path path = Paths.get(req.getServletContext().getRealPath(THUMBNAILS)).resolve(picture);
+			System.out.println("Thumbnails shearch:" + path.toAbsolutePath().toString());
 			BufferedImage image = ImageIO.read(path.toUri().toURL());
 
-			if (image == null) {
-				image = loadImage(tag, req);
-				saveImage(tag, image, req);
+			System.out.println("\n\n\n" + Files.exists(path));
+
+			if (!Files.exists(path)) {
+				System.out.println("Nema!");
+				image = loadImage(picture, req);
+				saveImage(picture, image, req);
 			}
 
 			images.add(path);
@@ -73,13 +78,14 @@ public class ThumbnailsServlet extends HttpServlet {
 	}
 
 	private void saveImage(String tag, BufferedImage image, HttpServletRequest req) throws IOException {
-		ImageIO.write(image, "jpg", Paths.get(req.getServletContext().getRealPath(THUMBNAILS + tag + ".jpg")).toFile());
+		ImageIO.write(image, "jpg", Paths.get(req.getServletContext().getRealPath(THUMBNAILS)).resolve(tag).toFile());
 	}
 
 	private BufferedImage loadImage(String tag, HttpServletRequest req) throws MalformedURLException, IOException {
 		BufferedImage image = ImageIO
-				.read(Paths.get(req.getServletContext().getRealPath(THUMBNAILS + tag + ".jpg")).toUri().toURL());
+				.read(Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(tag).toUri().toURL());
 
+		System.out.println("loading from " + Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(tag));
 		BufferedImage resized = new BufferedImage(DIMENSIONS, DIMENSIONS, BufferedImage.TYPE_3BYTE_BGR);
 
 		Graphics2D graphics = resized.createGraphics();
