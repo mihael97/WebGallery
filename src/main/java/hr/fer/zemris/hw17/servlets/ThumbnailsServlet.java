@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -16,10 +15,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
+import hr.fer.zemris.hw17.util.Picture;
 import hr.fer.zemris.hw17.util.Util;
 
 /**
@@ -34,64 +34,52 @@ import hr.fer.zemris.hw17.util.Util;
  */
 @WebServlet("/servlets/thumbnails")
 public class ThumbnailsServlet extends HttpServlet {
-	private final String THUMBNAILS = "/WEB-INF/thumbnails/";
-	private final String PICTURES = "/WEB-INF/slike/";
 	/**
 	 * Every thumb nail dimensions should be <code>150x150</code>
 	 */
 	private final Integer DIMENSIONS = 150;
+
+	private final static String THUMBNAILS = "WEB-INF/thumbnails/";
+	private final static String PICTURES = "WEB-INF/slike/";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Util.createFolder(req);
 
 		List<String> pictures = Util.getPictureByTag(req.getParameter("tagname"), req);
-		List<Path> images = new ArrayList<>();
 
 		for (String picture : pictures) {
-			Path path = Paths.get(req.getServletContext().getRealPath(THUMBNAILS)).resolve(picture);
-			System.out.println("Thumbnails shearch:" + path.toAbsolutePath().toString());
-			BufferedImage image = ImageIO.read(path.toUri().toURL());
+			BufferedImage image;
+			Path pathThumb = Paths.get(req.getServletContext().getRealPath(THUMBNAILS)).resolve(picture);
+			Path pathPic = Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(picture);
 
-			System.out.println("\n\n\n" + Files.exists(path));
-
-			if (!Files.exists(path)) {
-				System.out.println("Nema!");
-				image = loadImage(picture, req);
-				saveImage(picture, image, req);
+			if (!Files.exists(pathThumb)) {
+				image = loadImage(pathPic, req);
+				saveImage(pathThumb, image, req);
+			} else {
+				image = ImageIO.read(pathThumb.toUri().toURL());
 			}
-
-			images.add(path);
 		}
 
-		resp.getOutputStream().write(createResponse(images));
+		resp.setContentType("application/json;charset=UTF-8");
+
+		String string = new Gson().toJson(pictures.toArray());
+		resp.getWriter().write(string);
+		resp.getWriter().flush();
 	}
 
-	private byte[] createResponse(List<Path> images) {
-		JSONObject object = new JSONObject();
-		JSONArray array = new JSONArray();
-
-		images.forEach(e -> array.put(e));
-		object.put("images", array);
-
-		return object.toString().getBytes();
+	private void saveImage(Path path, BufferedImage image, HttpServletRequest req) throws IOException {
+		ImageIO.write(image, "jpg", path.toFile());
 	}
 
-	private void saveImage(String tag, BufferedImage image, HttpServletRequest req) throws IOException {
-		ImageIO.write(image, "jpg", Paths.get(req.getServletContext().getRealPath(THUMBNAILS)).resolve(tag).toFile());
-	}
-
-	private BufferedImage loadImage(String tag, HttpServletRequest req) throws MalformedURLException, IOException {
-		BufferedImage image = ImageIO
-				.read(Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(tag).toUri().toURL());
-
-		System.out.println("loading from " + Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(tag));
+	private BufferedImage loadImage(Path path, HttpServletRequest req) throws MalformedURLException, IOException {
+		BufferedImage image = ImageIO.read(path.toUri().toURL());
 		BufferedImage resized = new BufferedImage(DIMENSIONS, DIMENSIONS, BufferedImage.TYPE_3BYTE_BGR);
 
 		Graphics2D graphics = resized.createGraphics();
 		graphics.drawImage(image, 0, 0, DIMENSIONS, DIMENSIONS, null);
 		graphics.dispose();
 
-		return image;
+		return resized;
 	}
 }

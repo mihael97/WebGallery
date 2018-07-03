@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 public abstract class Util {
+
+	private final static String THUMBNAILS = "WEB-INF/thumbnails/";
+	private final static String PICTURES = "WEB-INF/slike/";
+
 	/**
 	 * Method loads file form disc and returns set of <code>unique</code> tags
 	 * 
@@ -58,11 +62,10 @@ public abstract class Util {
 	 *             - problems folder creating
 	 */
 	public static void createFolder(HttpServletRequest req) throws IOException {
-		Path pathToFolder = Paths.get(req.getServletContext().getRealPath("WEB-INF/thumbnails/"));
+		Path pathToFolder = Paths.get(req.getServletContext().getRealPath(THUMBNAILS));
 		System.out.println(pathToFolder.toAbsolutePath().toString());
 
 		if (!Files.isDirectory(pathToFolder)) {
-			System.out.println("Stvaram");
 			Files.createDirectory(pathToFolder);
 		}
 	}
@@ -91,10 +94,27 @@ public abstract class Util {
 
 			for (String string : array) {
 				if (parameter.equals(string)) {
-					System.out.println(file.get(i - 2));
 					forReturn.add(file.get(i - 2));
-					break;
 				}
+			}
+
+			i += 3; // tags are every third row
+		}
+
+		return forReturn;
+	}
+
+	public static Picture getPictureByName(String parameter, HttpServletRequest req) throws IOException {
+		Picture forReturn = null;
+
+		List<String> file = Files
+				.readAllLines(Paths.get(req.getServletContext().getRealPath("/WEB-INF/")).resolve("opisnik.txt"));
+		int i = 0;
+
+		while (i < file.size()) {
+			if (file.get(i).equals(parameter)) {
+				forReturn = new Picture(file.get(i + 2).split(","), file.get(i), file.get(i + 1));
+				break;
 			}
 
 			i += 3; // tags are every third row
