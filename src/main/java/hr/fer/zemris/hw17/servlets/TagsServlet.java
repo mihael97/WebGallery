@@ -43,8 +43,6 @@ public class TagsServlet extends HttpServlet {
 		set.toArray(array);
 		resp.setContentType("application/json;charset=UTF-8");
 
-		System.out.println("\nTU SAM!\n");
-
 		Gson gson = new Gson();
 		String jsonText = gson.toJson(array);
 		resp.getWriter().write(jsonText);

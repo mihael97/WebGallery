@@ -1,12 +1,15 @@
-<!DOCTYPE>
-
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>Gallery</title>
+
 <script type="text/javascript">
-	function fillTags() {
+<!--
+	function thumbnails(tag) {
 		var xmlhttp;
+
 		if (window.XMLHttpRequest) {
-			// code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp = new XMLHttpRequest();
 		} else {
 			// code for IE6, IE5
@@ -17,51 +20,68 @@
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				var text = xmlhttp.responseText;
 				var array = JSON.parse(text);
-				var htmlText = ""
+				var html = "";
 
+				html += '<h3>List of tags<h3>';
 				for (var i = 0; i < array.length; i++) {
-					htmlText += '<input type="button" value="' + array[i]
-							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
+					html += '<input type="button" value="' + array[i]
+							+ '" class="button" onClick="showPicture(\''
+							+ array[i] + '\')" />';
+
+					if ((i + 1) % 3 == 0) {
+						html += '<br>';
+					}
 				}
-				
-                document.getElementById("tags").innerHTML = htmlText;
+				document.getElementById("thumbnails").innerHTML = html;
+			}
+		}
+
+		xmlhttp.open("GET", "servlets/thumbnails?tagname=" + tag + "", true);
+		xmlhttp.send();
+	}
+	function fillTags() {
+		var xmlhttp;
+
+		if (window.XMLHttpRequest) {
+			xmlhttp = new XMLHttpRequest();
+		} else {
+			// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var text = xmlhttp.responseText;
+				var array = JSON.parse(text);
+				var html = "";
+
+				html += '<h3>List of tags<h3>';
+				for (var i = 0; i < array.length; i++) {
+					html += '<input type="button" value="' + array[i]
+							+ '" class="button" onClick="thumbnails(\''
+							+ array[i] + '\')" />';
+
+					if ((i + 1) % 3 == 0) {
+						html += '<br>';
+					}
+				}
+				document.getElementById("tags").innerHTML = html;
 			}
 		}
 		xmlhttp.open("GET", "servlets/tags", true);
-		xmlhttp.send();		
-	}
-	
-	function showLittle(String tagName) {
-		var xmlhttp;
-		if (window.XMLHttpRequest) {
-			// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp = new XMLHttpRequest();
-		} else {
-			// code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				var text = xmlhttp.responseText;
-				var array = JSON.parse(text);
-				var htmlText = ""
-
-				for (var i = 0; i < array.length; i++) {
-					htmlText += '<input type="button" value="' + array[i]
-							+ '" onClick="showLittle(\'' + array[i] + '\')';//on click,calls function for thumbnails showing
-				}
-
-			}
-		}
-		xmlhttp.open("GET", "servlets/thumbnails?tag="+tagName, true);
 		xmlhttp.send();
 	}
+//-->
 </script>
+
 </head>
+<link href="designe.css" rel="stylesheet" type="text/css">
 <body onload="fillTags();">
-	<!-- when pages loads,calls method for filling tags -->
-	<div id="tags">&nbsp;</div>
+	<h1>Vehicle gallery</h1>
+	<div id="container">
+		<div id="tags">&nbsp;</div>
+		<div id="thumbnails">&nbsp;</div>
+	</div>
 
 </body>
 </html>

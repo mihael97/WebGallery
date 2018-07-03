@@ -1,0 +1,17 @@
+.button {
+	height: 30px;
+	width: 150px;
+}
+
+#tags {
+	float: left;
+	background-color: white;
+}
+
+#thumbnails {
+	float: right;
+}
+
+body {
+	background-color: coral;
+}
