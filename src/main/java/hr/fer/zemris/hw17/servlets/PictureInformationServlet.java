@@ -34,7 +34,7 @@ public class PictureInformationServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Picture picture = Util.getPictureByName(req.getParameter("name"), req);
+		Picture picture = Util.getPictureByName(req.getParameter("name"));
 
 		resp.getWriter().write(new Gson().toJson(picture));
 		resp.getWriter().flush();

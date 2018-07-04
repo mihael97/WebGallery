@@ -23,7 +23,7 @@
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <webApp>
-            <contextPath>/jsaplikacija</contextPath>
+            <contextPath>/gallery</contextPath>
           </webApp>
         </configuration>
       </plugin>

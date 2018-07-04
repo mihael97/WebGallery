@@ -7,9 +7,6 @@ bmw,8,germany,luxury
 bmwE30.jpg
 BMW E30
 bmw,e,30,e30,germany,old
-bmwi3.jpg
-BMW i3
-bmw,i3,city,hibrid,electric
 dodgeRAM.jpg
 Dodge RAM
 dodge,ram,usa,big
@@ -36,16 +33,16 @@ Lada Niva
 lada,niva,russia,4x4,petrol
 mercedesA.jpg
 Mercedes A class
-mercedes,A,germany,city,speed
+mercedes,germany,city,speed
 opelZafira.jpg
 Opel Zafira
 opel,zafira,germany,family,big
 smartForFour.jpg
 Smart For Four,
-smart,for,four,germany,mercedes,city
+smart,germany,mercedes,city
 subaruImpreza.jpg
 Subaru Impreza WRX
-subaru,impreza,japan,wrx,sti,petrol,speed,power
+subaru,impreza,japan,wrx,sti,petrol,speed,power,4x4
 yamahaR1.jpg
 Yamaha R1
 yamaha,r1,japan,power,speed

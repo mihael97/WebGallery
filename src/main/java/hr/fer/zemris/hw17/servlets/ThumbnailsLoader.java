@@ -1,8 +1,12 @@
 package hr.fer.zemris.hw17.servlets;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
@@ -26,9 +30,17 @@ public class ThumbnailsLoader extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Path to folder with thumbs
+	 * Path to folder with thumbnails
 	 */
 	private final static String THUMBS = "WEB-INF/thumbnails/";
+	/**
+	 * Path to folder with pictures
+	 */
+	private final static String PICTURES = "WEB-INF/slike/";
+	/**
+	 * Every thumbnail dimensions should be <code>150x150</code>
+	 */
+	private final Integer DIMENSIONS = 150;
 
 	/**
 	 * Method returns thumnail icon for picture which name is given by parameter
@@ -40,11 +52,60 @@ public class ThumbnailsLoader extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String name = req.getParameter("name");
-		BufferedImage image = ImageIO
-				.read(Paths.get(req.getServletContext().getRealPath(THUMBS)).resolve(name).toUri().toURL());
+		BufferedImage image;
+		String picture = req.getParameter("name");
+		Path pathThumb = Paths.get(req.getServletContext().getRealPath(THUMBS)).resolve(picture);
+		Path pathPic = Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(picture);
+
+		if (!Files.exists(pathThumb)) {
+			image = loadImage(pathPic, req);
+			saveImage(pathThumb, image, req);
+		} else {
+			image = ImageIO.read(pathThumb.toUri().toURL());
+		}
+
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpg", stream);
 		resp.getOutputStream().write(stream.toByteArray());
+	}
+
+	/**
+	 * Method saves photo in <code>jpg</code> format on disc
+	 * 
+	 * @param path
+	 *            - path to place for storing
+	 * @param image
+	 *            - image
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @throws IOException
+	 *             - exception during writing
+	 */
+	private void saveImage(Path path, BufferedImage image, HttpServletRequest req) throws IOException {
+		ImageIO.write(image, "jpg", path.toFile());
+	}
+
+	/**
+	 * Method loads picture in full size form disc and resizes it
+	 * 
+	 * @param path
+	 *            - path to location where picture is stored
+	 * @param req
+	 *            - {@link HttpServletRequest}
+	 * @return resized photo
+	 * @throws MalformedURLException
+	 *             - exceptions with URL
+	 * @throws IOException
+	 *             - if exception during loading appears
+	 */
+	private BufferedImage loadImage(Path path, HttpServletRequest req) throws MalformedURLException, IOException {
+		BufferedImage image = ImageIO.read(path.toUri().toURL());
+		BufferedImage resized = new BufferedImage(DIMENSIONS, DIMENSIONS, BufferedImage.TYPE_3BYTE_BGR);
+
+		Graphics2D graphics = resized.createGraphics();
+		graphics.drawImage(image, 0, 0, DIMENSIONS, DIMENSIONS, null);
+		graphics.dispose();
+
+		return resized;
 	}
 }

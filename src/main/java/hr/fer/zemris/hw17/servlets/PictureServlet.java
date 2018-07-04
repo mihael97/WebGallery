@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 /**
  * Class provides implementation for returning pictures in full size
  * 
@@ -25,7 +27,7 @@ public class PictureServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Paht to folder with pictures
+	 * Path to folder with pictures
 	 */
 	private final static String PICTURES = "WEB-INF/slike/";
 
@@ -40,10 +42,11 @@ public class PictureServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String name = req.getParameter("name");
+		System.out.println("U picture!");
 		BufferedImage image = ImageIO
 				.read(Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(name).toUri().toURL());
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpg", stream);
-		resp.getOutputStream().write(stream.toByteArray());
+		resp.getWriter().write(new Gson().toJson(stream).toString());
 	}
 }
