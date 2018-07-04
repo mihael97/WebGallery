@@ -46,14 +46,11 @@ public abstract class Util {
 	 *             - exception during reading
 	 */
 	 public static void init(ServletContextEvent sce) throws IOException {
-	//public static void init() throws IOException {
 		List<String> file = Files
 				.readAllLines(Paths.get(sce.getServletContext().getRealPath("/WEB-INF/")).resolve("opisnik.txt"));
 
-		//List<String> file = Files.readAllLines(Paths.get("opisnik.txt"));
 		int i = 0;
 		pictures = new ArrayList<>();
-		System.out.println("tu san!");
 
 		while (i < file.size()) {
 			String name = file.get(i++);
@@ -64,7 +61,6 @@ public abstract class Util {
 		}
 
 		 THUMBNAILS = sce.getServletContext().getRealPath("WEB-INF/thumbnails/");
-		//THUMBNAILS = "WEB-INF/thumbnails/";
 	}
 
 	/**
@@ -75,12 +71,9 @@ public abstract class Util {
 	 *             -exception during reading
 	 */
 	public static Set<String> getTags() throws IOException {
-		//init();
 		Set<String> forReturn = new HashSet<>();
-		System.out.println("\n\n\n\nTU SAM! haha " + pictures == null + " " + pictures.size());
 
 		for (Picture pic : pictures) {
-			System.out.println(pic.getPhotoName());
 			forReturn.addAll(Arrays.asList(pic.getTags()));
 		}
 
@@ -98,7 +91,6 @@ public abstract class Util {
 	 */
 	public static void createFolder() throws IOException {
 		java.nio.file.Path pathToFolder = Paths.get(THUMBNAILS);
-		System.out.println(pathToFolder.toAbsolutePath().toString());
 
 		if (!Files.isDirectory(pathToFolder)) {
 			Files.createDirectory(pathToFolder);

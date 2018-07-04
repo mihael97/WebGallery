@@ -6,10 +6,24 @@
 
 <script type="text/javascript">
 <!--
-	function getPicture(name) {
-		
-	}
+	function showPicture(name) {
+		let xmlhttp;
 
+		if (window.XMLHttpRequest) {
+			xmlhttp = new XMLHttpRequest();
+		} else {
+			// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("picture").innerHTML = "hehe";
+			}
+		}
+		xmlhttp.open("GET", "rest/method/picInfo/" + name, true);
+		xmlhttp.send();
+	}
 	function thumbnails(tag) {
 		let xmlhttp;
 
@@ -26,11 +40,10 @@
 				let array = JSON.parse(text);
 				let html = "";
 
-				html += '<h3>Thumbnails</h3>'
+				html += '<h2>Thumbnails</h2>'
 				for (let i = 0; i < array.length; i++) {
 					html += "<img src='servlets/getThumb?name=" + array[i]
-							+ "' onclick='getPicture(\"" + array[i]
-							+ "\")'></img>";
+							+ "' onClick="showPicture("'+array[i]+'")"></img>";
 
 					if ((i + 1) % 3 == 0) {
 						html += '<br>';
@@ -56,7 +69,7 @@
 				var text = xmlhttp.responseText;
 				var array = JSON.parse(text);
 				var html = "";
-				html += '<h3>List of tags'<h3>';
+				html += '<h2>List of tags</h2>';
 				for (var i = 0; i < array.length; i++) {
 					html += '<input type="button" value="' + array[i]
 							+ '" class="button" onClick="thumbnails(\''
@@ -75,9 +88,9 @@
 </script>
 
 </head>
-<link href="designe.css" rel="stylesheet" type="text/css">
+<link href="design.css" rel="stylesheet" type="text/css">
 <body onload="fillTags();">
-	<h1>Vehicle gallery</h1>
+	<h1 align="center">Vehicle gallery</h1>
 	<div id="container">
 		<div id="tags">&nbsp;</div>
 		<div id="thumbnails">&nbsp;</div>
