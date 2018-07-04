@@ -2,7 +2,6 @@ package hr.fer.zemris.hw17.servlets;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -23,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Mihael
  *
  */
-@WebServlet("servlets/getThumb")
+@WebServlet("/servlets/getThumb")
 public class ThumbnailsLoader extends HttpServlet {
 	/**
 	 * serialVersionUID
@@ -64,9 +63,8 @@ public class ThumbnailsLoader extends HttpServlet {
 			image = ImageIO.read(pathThumb.toUri().toURL());
 		}
 
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		ImageIO.write(image, "jpg", stream);
-		resp.getOutputStream().write(stream.toByteArray());
+		ImageIO.write(image, "jpg", resp.getOutputStream());
+		resp.getOutputStream().flush();
 	}
 
 	/**

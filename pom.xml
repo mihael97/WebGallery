@@ -28,7 +28,7 @@
         </configuration>
       </plugin>
     </plugins>
-    <finalName>jsaplikacija</finalName>
+    <finalName>gallery</finalName>
   </build>
   
   <dependencies>

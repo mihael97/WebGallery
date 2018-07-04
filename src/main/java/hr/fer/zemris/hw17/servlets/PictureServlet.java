@@ -1,7 +1,6 @@
 package hr.fer.zemris.hw17.servlets;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -12,15 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
 /**
  * Class provides implementation for returning pictures in full size
  * 
  * @author Mihael
  *
  */
-@WebServlet("servlets/picture")
+@WebServlet("/servlets/picture")
 public class PictureServlet extends HttpServlet {
 	/**
 	 * serialVersionUID
@@ -42,11 +39,9 @@ public class PictureServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String name = req.getParameter("name");
-		System.out.println("U picture!");
 		BufferedImage image = ImageIO
 				.read(Paths.get(req.getServletContext().getRealPath(PICTURES)).resolve(name).toUri().toURL());
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		ImageIO.write(image, "jpg", stream);
-		resp.getWriter().write(new Gson().toJson(stream).toString());
+		ImageIO.write(image, "jpg", resp.getOutputStream());
+		resp.getOutputStream().flush();
 	}
 }

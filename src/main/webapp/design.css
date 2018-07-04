@@ -4,12 +4,6 @@
 }
 
 #tags {
-	float: left;
-	background-color: white;
-}
-
-#thumbnails {
-	float: right;
 	background-color: white;
 }
 
@@ -23,4 +17,15 @@ h1 {
 
 h2 {
 	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+img {
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.picture {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
